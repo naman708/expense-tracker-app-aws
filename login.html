@@ -10,7 +10,7 @@
   <div class="container">
     <div class="card-body">
      <h1 class="title">Expense Tracker</h1>
-     <form  method="POST" id="loginform">
+     <form   id="loginform">
      <label for="email" class="form-label">Email</label>
      <input type="email" id="email" name="email" class="form-control" required ><br>
      <label for="pass" class="form-label">Password</label>
@@ -18,7 +18,7 @@
      <ul id="msg" class="list-group">
      </ul>
 
-      <button type="submit" class="btn btn-dark">LOgin</button>
+      <button type="submit" class="btn btn-dark">Login</button>
     </form>
     <a href="signup.html">New user Signin </a>
     
@@ -31,19 +31,28 @@
 const login=document.getElementById('loginform');
 login.addEventListener('submit',onsubmit);
 function onsubmit(e){
-    e.preventdefault();
-    //const EMAILL =document.getElementById('email').value;
-    //const PASSWORD=document.getElementById('pass').value;
-    axios.get("http://localhost:3000'/user/login")
-    .then((res)=>{
-        const EMAILL =document.getElementById('email').value;
-       const PASSWORD=document.getElementById('pass').value;
-        
-        for(var i=0;i<res.data.userlogin.length;i++){
-            const user=res.data.userlogin.length[i];
-            if(user.EMAIL!=EMAILL)
-        }
-    })
+    e.preventDefault();
+    const EMAILL =document.getElementById('email').value;
+    const PASSWORD=document.getElementById('pass').value;
+    axios.get(`http://localhost:3000/user/login`)
+        .then((res) => {
+          console.log(res.data);
+          const userlogin = res.data.userlogin;
+
+          for (let i = 0; i < userlogin.length; i++) {
+            const user = userlogin[i];
+            if (user.EMAIL === EMAILL && user.PASSWORD === PASSWORD) {
+              window.alert('Login successful');
+              console.log('Login successful');
+              return;
+            }
+          }
+          window.alert('Login failed. Please check your credentials.');
+          console.log('Login failed');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
 };
 </script>

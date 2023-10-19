@@ -31,3 +31,16 @@ exports.alreadyauser=async(req,res)=>{
   }
 
 };
+exports.finduser=async(req,res)=>{
+    try{
+    const finduser=await SIGNIN.findAll()
+    res.status(201).json({userlogin:finduser});
+
+    }
+    
+    catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while registering user .');
+      }
+
+};
