@@ -1,28 +1,21 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../util/database');
 
-const SIGNIN = sequelize.define('userDetails', {
+const Product = sequelize.define('userData', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  USERNAME: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  EMAIL: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique:true,
-
-  },
-  PASSWORD: {
-    type: DataTypes.STRING,
+  description: {
+    type: DataTypes.TEXT,
     allowNull: false,
   },
-  ispremiumuser: Sequelize.BOOLEAN
 });
 
-module.exports = SIGNIN;
+module.exports = Product;

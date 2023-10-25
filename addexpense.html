@@ -10,7 +10,7 @@
   <div class="container">
     <div class="card-body">
      <h1 class="title">Add Daily Expense</h1>
-     <form  method="POST" id="signinform" class="form-inline">
+     <form  method="POST" id="addexpense" class="form-inline">
      <label for="price" class="form-label">Expense Amount :</label>
      <input type="text" id="price" name="price" class="form-control" required ><br>
      <label for="des" class="form-label">Expense Description :</label>
@@ -20,9 +20,106 @@
 
       <button type="submit" class="btn btn-dark">Add Expense</button>
     </form>
-    
+    <button id="pre" class="btn-sm mt-3 mb-3">BUY PREMIUM</button>
 
+    <div class="container mt-3 md-3" id="listofexpenses">
+        <ul class="list-group" id="expenselist"></ul>
+
+    </div>
     </div>
     </div>
 </body>
 </html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script >
+    const premiumbtn=document.getElementById('pre');
+    premiumbtn.style.backgroundColor = 'green';
+    premiumbtn.onclick=async function(e){
+        const token=localStorage.getItem('token');
+        const headers = {
+            "Authorization":token
+        };
+        const response=await axios.get("http://localhost:3000/purchase/premiummembership",{headers})
+        console.log(response);
+        var options={
+            "key":response.data.key_id,
+            "order_id":response.data.order.id,
+            "handler": async function(response){
+                await axios.post("http://localhost:3000/purchase/updatetransaction",{
+                    order_id:options.order_id,
+                    payment_id:response.razorpay_payment_id,
+                },{headers})
+                alert('you are a premium user now')
+            },
+        };
+        const rzp1=new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+        rzp1.on('payment.failed',function(response){
+            console.log(response);
+            alert('something went wrong')
+        });
+
+    };
+    const form=document.getElementById('addexpense');
+    form.addEventListener('submit',onsubmit);
+    function onsubmit(e){
+        e.preventDefault();
+        const Price=document.getElementById('price').value;
+        const Description=document.getElementById('des').value;
+        const Category=document.getElementById('category').value;
+        const obj1={
+            Price,
+            Description,
+            Category
+        };
+      
+        const token=localStorage.getItem('token');
+        const headers = {
+            "Authorization":token
+        };
+
+        axios.post("http://localhost:3000/user/login/add-expense",obj1,{headers})
+        .then((res)=>{
+            console.log(res.data.added);
+            showuser(res.data.added);
+
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+
+
+    };
+    function showuser(user){
+        const Expenselist= document.getElementById('expenselist');
+        const li=document.createElement('li');
+        li.className="list-group-item";
+
+        li.appendChild(document.createTextNode(`Expense Amount :${user.Price} Expense Description:${user.Description} Expense category:${user.Category}`));
+        Expenselist.appendChild(li);
+
+
+    };
+    
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        const token=localStorage.getItem('token');
+        const headers = {
+            "Authorization":token
+        };
+        axios.get("http://localhost:3000/user/login/show-expense",{headers})
+            .then((res) => {
+                console.log(res.data);
+                for (var i = 0; i < res.data.Alluserdata.length; i++) {
+                    showuser(res.data.Alluserdata[i]);
+                }
+            })
+            .catch((err) => console.log(err));
+    })
+
+
+
+</script>

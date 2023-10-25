@@ -22,7 +22,8 @@
 
       <button type="submit" class="btn btn-dark">Sign in</button>
     </form>
-    
+    <a href="login.html">Existing user Log in</a>
+
     </div>
     </div>
 </body>
@@ -43,8 +44,8 @@
     };
     axios.get(`http://localhost:3000/user/alreadyexist/${EMAIL}`)
     .then((res)=>{
-        console.log(res.data);
-        if(res.data.user==null){
+        console.log(res.data.user);
+        if(res.data.user.length==0){
             axios.post("http://localhost:3000/user/signin",obj)
             .then((res)=>{
                 console.log(res.data);

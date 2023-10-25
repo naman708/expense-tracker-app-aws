@@ -28,31 +28,36 @@
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 <script >
+
 const login=document.getElementById('loginform');
 login.addEventListener('submit',onsubmit);
 function onsubmit(e){
     e.preventDefault();
-    const EMAILL =document.getElementById('email').value;
+    const EMAIL =document.getElementById('email').value;
     const PASSWORD=document.getElementById('pass').value;
-    axios.get(`http://localhost:3000/user/login`)
+    const obj={
+        EMAIL,
+        PASSWORD
+    };
+    axios.post(`http://localhost:3000/user/login`,obj)
         .then((res) => {
           console.log(res.data);
-          const userlogin = res.data.userlogin;
-
-          for (let i = 0; i < userlogin.length; i++) {
-            const user = userlogin[i];
-            if (user.EMAIL === EMAILL && user.PASSWORD === PASSWORD) {
-              window.alert('Login successful');
-              console.log('Login successful');
-              return;
-            }
+          if(res.data.success==true){
+            window.alert('Login successful');
+            localStorage.setItem('token',res.data.token);
+            window.location.href = 'addexpense.html';
           }
-          window.alert('Login failed. Please check your credentials.');
-          console.log('Login failed');
+          else if(res.data.message=='password is incorrect'){
+            window.alert('Login failed. Please check your credentials.');
+          }
+          else{
+            window.alert('invalid email id');
+          }
+          
         })
         .catch((err) => {
           console.log(err);
-        });
+        })
 
 };
 </script>
