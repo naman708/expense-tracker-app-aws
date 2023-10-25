@@ -15,6 +15,7 @@ const sequelize = require('./util/database');
 const signinroute = require('./routes/signinroute');
 const addordelExpense = require('./routes/addordelexpense');
 const purchase= require('./routes/purchase');
+const PremiumFeat= require('./routes/premiumfeature');
 const rootDir=require('./util/path');
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(signinroute);
 app.use(addordelExpense);
 app.use(purchase);
+app.use(PremiumFeat);
 SIGNIN.hasMany(Expense);
 Expense.belongsTo(SIGNIN);
 SIGNIN.hasMany(Order);
