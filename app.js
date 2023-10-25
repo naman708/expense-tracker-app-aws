@@ -6,10 +6,15 @@ const cors = require('cors');
 
 // Use CORS middleware
 
+const Expense=require('./models/expense');
+const SIGNIN=require('./models/signin');
+const Order = require('./models/orders');
 
 const bodyParser = require('body-parser');
 const sequelize = require('./util/database');
 const signinroute = require('./routes/signinroute');
+const addordelExpense = require('./routes/addordelexpense');
+const purchase= require('./routes/purchase');
 const rootDir=require('./util/path');
 
 const app = express();
@@ -19,6 +24,12 @@ app.use(bodyParser.json({extended:false}));
 app.use(express.static(path.join(__dirname,'public')));
 
 app.use(signinroute);
+app.use(addordelExpense);
+app.use(purchase);
+SIGNIN.hasMany(Expense);
+Expense.belongsTo(SIGNIN);
+SIGNIN.hasMany(Order);
+Order.belongsTo(SIGNIN);
 
 sequelize.sync().then(() => {
   console.log('Database & tables created!');
