@@ -6,18 +6,7 @@ const usercontrol=require('./expensesignin');
 
 const getUserLeaderBoard = async (req, res) => {
     try{
-        const leaderboardofusers = await SIGNIN.findAll({
-            attributes: ['id', 'USERNAME',[sequelize.fn('sum', sequelize.col('expenses.Price')), 'total_cost'] ],
-            include: [
-                {
-                    model: Expense,
-                    attributes: []
-                }
-            ],
-            group:['userDetails.id'],
-            order:[['total_cost', 'DESC']]
-
-        })
+        const leaderboardofusers = await SIGNIN.findAll()
 
         res.status(200).json({premiumdata:leaderboardofusers})
 
