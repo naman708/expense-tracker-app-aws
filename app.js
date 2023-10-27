@@ -16,6 +16,8 @@ const signinroute = require('./routes/signinroute');
 const addordelExpense = require('./routes/addordelexpense');
 const purchase= require('./routes/purchase');
 const PremiumFeat= require('./routes/premiumfeature');
+const ResetPassword= require('./routes/resetpassword');
+
 const rootDir=require('./util/path');
 
 const app = express();
@@ -28,6 +30,7 @@ app.use(signinroute);
 app.use(addordelExpense);
 app.use(purchase);
 app.use(PremiumFeat);
+app.use(ResetPassword);
 SIGNIN.hasMany(Expense);
 Expense.belongsTo(SIGNIN);
 SIGNIN.hasMany(Order);
